@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.bulgakov.SpringBoot.model.Users;
 import ru.bulgakov.SpringBoot.service.UserService;
@@ -33,7 +34,10 @@ public class UserController {
     }
 
     @PostMapping("/")
-    public String create(@ModelAttribute("users") @Valid Users users) {
+    public String create(@ModelAttribute("users") @Valid Users users, BindingResult bindingResult) {
+        if (bindingResult.hasErrors())
+            return "/new";
+
         userService.addUser(users);
         return "redirect:/";
     }
@@ -42,7 +46,7 @@ public class UserController {
     @GetMapping("/edit")
     public String editUser(@RequestParam("id") int id, Model model) {
         model.addAttribute("editUser", userService.getUserById(id));
-        return "edit";
+        return "/edit";
     }
 
     @PatchMapping("/edit")
@@ -51,11 +55,6 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/delete")
-    public String delete(@RequestParam("id") int id, Model model) {
-        model.addAttribute("deleteUser", userService.getUserById(id));
-        return "delete";
-    }
 
     @DeleteMapping("/delete")
     public String deleteUser(@RequestParam("id") int id) {

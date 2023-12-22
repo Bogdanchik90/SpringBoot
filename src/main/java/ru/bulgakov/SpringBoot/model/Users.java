@@ -2,6 +2,9 @@ package ru.bulgakov.SpringBoot.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "Users")
@@ -12,7 +15,10 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "name")
+    @NotEmpty(message = "имя не может быть пустым")
+    @Size(min = 2, max = 30, message = "имя должно быть от 2 до 30 символов")
     private String name;
+    @Min(value = 0, message = "возраст не может быть отрицательным")
     @Column(name = "age")
     private int age;
 
