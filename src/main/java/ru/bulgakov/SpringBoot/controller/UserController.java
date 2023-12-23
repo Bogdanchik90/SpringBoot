@@ -50,7 +50,11 @@ public class UserController {
     }
 
     @PatchMapping("/edit")
-    public String update(@RequestParam("id") int id, @ModelAttribute("editUsers") @Valid Users updateUsers) {
+    public String update(@RequestParam("id") int id, @ModelAttribute("editUser") @Valid Users updateUsers,
+                         BindingResult bindingResult) {
+        if (bindingResult.hasErrors())
+            return "/edit";
+
         userService.editUser(id, updateUsers);
         return "redirect:/";
     }
